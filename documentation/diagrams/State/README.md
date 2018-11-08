@@ -1,13 +1,13 @@
 # Диаграмма состояний
 
-#SubmitKey
+# SubmitKey
 ![Диаграмма состояний](SubmitKeyState.png)
 
-#ChooseFile
+# ChooseFile
 ![Диаграмма состояний](ChooseFileState.png)
 
-#Encryption
+# Encryption
 ![Диаграмма состояний](EncryptionState.png)
 
-#Decryption
+# Decryption
 ![Диаграмма состояний](DecryptionState.png)
