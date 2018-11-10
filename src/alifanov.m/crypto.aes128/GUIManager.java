@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 
 
+
 public class GUIManager {
 
     private static String inputFileDirectory;
@@ -13,14 +14,20 @@ public class GUIManager {
     private static void addComponentsToPane(Container pane) {
         pane.setLayout(new GridBagLayout());
         GridBagConstraints constraints = new GridBagConstraints();
+
         constraints.fill = GridBagConstraints.HORIZONTAL;
         constraints.weightx = 1;
+        constraints.weighty = 0.5;
 
         JButton decryptionButton = new JButton("Decryption");
         JButton encryptionButton = new JButton("Encryption");
+        JButton submitKeyButton = new JButton("Submit Key");
+
         decryptionButton.setEnabled(false);
         encryptionButton.setEnabled(false);
+
         JButton fileChooser = new JButton("Choose File");
+
         JTextField inputKeyTextField = new JTextField();
         JTextField resultTextField = new JTextField();
 
@@ -36,7 +43,6 @@ public class GUIManager {
         constraints.gridy = 0;
         pane.add(encryptionButton, constraints);
 
-
         constraints.gridx = 1;
         constraints.gridy = 1;
         pane.add(new JLabel("Input Key for Decryption/Encryption"), constraints);
@@ -45,9 +51,16 @@ public class GUIManager {
         constraints.gridy = 2;
         pane.add(inputKeyTextField, constraints);
 
-        constraints.weighty = 1;
+        constraints.gridx = 2;
+        constraints.gridy = 2;
+        pane.add(submitKeyButton,constraints);
+
         constraints.gridx = 1;
         constraints.gridy = 3;
+        pane.add(new JLabel("This is your result Key"), constraints);
+
+        constraints.gridx = 1;
+        constraints.gridy = 4;
         pane.add(resultTextField, constraints);
 
     }
