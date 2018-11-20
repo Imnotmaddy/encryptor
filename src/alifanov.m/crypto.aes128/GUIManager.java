@@ -2,6 +2,9 @@ package alifanov.m.crypto.aes128;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.IOException;
+
+import static javax.swing.JOptionPane.showMessageDialog;
 
 
 public class GUIManager {
@@ -61,6 +64,45 @@ public class GUIManager {
         constraints.gridx = 1;
         constraints.gridy = 4;
         pane.add(resultTextField, constraints);
+
+
+        fileChooser.addActionListener(e -> {
+            JFileChooser fileopen = new JFileChooser();
+            int ret = fileopen.showDialog(null, "Открыть файл");
+            if (ret == JFileChooser.APPROVE_OPTION) {
+                inputFileDirectory = fileopen.getCurrentDirectory()+"\\" + fileopen.getSelectedFile().getName();
+                outputFileDirectory = fileopen.getCurrentDirectory().getAbsolutePath()+"\\" + "NEW_" + fileopen.getSelectedFile().getName();
+                encryptionButton.setEnabled(true);
+                decryptionButton.setEnabled(true);
+            }
+        });
+        decryptionButton.addActionListener(e -> {
+            try {
+                if (inputKeyTextField.getText().length() < 16) {
+                    showMessageDialog(null, "You need 16 symbol key");
+                } else {
+                    ThreadManager threadManager = new ThreadManager(inputFileDirectory, arrayToMatrix(inputKeyTextField.getText()));
+                    threadManager.startDecryption(outputFileDirectory);
+                    resultTextField.setText("Success");
+                }
+            } catch (IOException exception) {
+                System.out.println("Exception in Decryption");
+            }
+        });
+
+        encryptionButton.addActionListener(e -> {
+            try {
+                if (inputKeyTextField.getText().length() < 16) {
+                    showMessageDialog(null, "You need 16 symbol key");
+                } else {
+                    ThreadManager threadManager = new ThreadManager(inputFileDirectory, arrayToMatrix(inputKeyTextField.getText()));
+                    key = threadManager.startEncryption(outputFileDirectory);
+                    resultTextField.setText(matrixToString());
+                }
+            } catch (IOException exc) {
+                showMessageDialog(null, "Exception in Encryption");
+            }
+        });
 
     }
 
