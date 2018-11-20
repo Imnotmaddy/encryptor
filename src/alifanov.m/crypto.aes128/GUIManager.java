@@ -4,7 +4,6 @@ import javax.swing.*;
 import java.awt.*;
 
 
-
 public class GUIManager {
 
     private static String inputFileDirectory;
@@ -53,7 +52,7 @@ public class GUIManager {
 
         constraints.gridx = 2;
         constraints.gridy = 2;
-        pane.add(submitKeyButton,constraints);
+        pane.add(submitKeyButton, constraints);
 
         constraints.gridx = 1;
         constraints.gridy = 3;
@@ -68,8 +67,9 @@ public class GUIManager {
     private static int[][] arrayToMatrix(String str) {
         int k = 0;
         for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < 4; j++, k++)
+            for (int j = 0; j < 4; j++, k++) {
                 key[j][i] = str.charAt(k);
+            }
         }
         return key;
     }
@@ -78,8 +78,9 @@ public class GUIManager {
         int k = 0;
         String str = "";
         for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < 4; j++, k++)
+            for (int j = 0; j < 4; j++, k++) {
                 str += (char) key[j][i];
+            }
         }
         return str;
     }
