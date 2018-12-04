@@ -11,6 +11,7 @@ public class GUIManager {
 
     private static String inputFileDirectory;
     private static String outputFileDirectory;
+    private static String input_key;
     private static int[][] key = new int[4][4];
 
     private static void addComponentsToPane(Container pane) {
@@ -59,32 +60,47 @@ public class GUIManager {
 
         constraints.gridx = 1;
         constraints.gridy = 3;
-        pane.add(new JLabel("This is your result Key"), constraints);
+        JLabel keyInfoLabel = new JLabel("Current key is: ");
+        pane.add(keyInfoLabel, constraints);
 
         constraints.gridx = 1;
         constraints.gridy = 4;
         pane.add(resultTextField, constraints);
+
+        submitKeyButton.addActionListener(e -> {
+            input_key = inputKeyTextField.getText();
+            if (input_key.length() < 16) {
+                JOptionPane.showMessageDialog(null,"You need 16 symbol key", "Error", JOptionPane.ERROR_MESSAGE);
+                input_key = null;
+            }
+            else {
+                showMessageDialog(null, "Your key is: "+ input_key);
+                keyInfoLabel.setText(keyInfoLabel.getText() + input_key);
+            }
+            if (!(inputFileDirectory == null) || !(outputFileDirectory == null)) {
+                encryptionButton.setEnabled(true);
+                decryptionButton.setEnabled(true);
+            }
+        });
 
 
         fileChooser.addActionListener(e -> {
             JFileChooser fileopen = new JFileChooser();
             int ret = fileopen.showDialog(null, "Открыть файл");
             if (ret == JFileChooser.APPROVE_OPTION) {
-                inputFileDirectory = fileopen.getCurrentDirectory()+"\\" + fileopen.getSelectedFile().getName();
-                outputFileDirectory = fileopen.getCurrentDirectory().getAbsolutePath()+"\\" + "NEW_" + fileopen.getSelectedFile().getName();
-                encryptionButton.setEnabled(true);
-                decryptionButton.setEnabled(true);
+                inputFileDirectory = fileopen.getCurrentDirectory() + "\\" + fileopen.getSelectedFile().getName();
+                outputFileDirectory = fileopen.getCurrentDirectory().getAbsolutePath() + "\\" + "NEW_" + fileopen.getSelectedFile().getName();
+                if (!(input_key == null)) {
+                    encryptionButton.setEnabled(true);
+                    decryptionButton.setEnabled(true);
+                }
             }
         });
         decryptionButton.addActionListener(e -> {
             try {
-                if (inputKeyTextField.getText().length() < 16) {
-                    showMessageDialog(null, "You need 16 symbol key");
-                } else {
-                    ThreadManager threadManager = new ThreadManager(inputFileDirectory, arrayToMatrix(inputKeyTextField.getText()));
-                    threadManager.startDecryption(outputFileDirectory);
-                    resultTextField.setText("Success");
-                }
+                ThreadManager threadManager = new ThreadManager(inputFileDirectory, arrayToMatrix(input_key));
+                threadManager.startDecryption(outputFileDirectory);
+                resultTextField.setText("Success");
             } catch (IOException exception) {
                 System.out.println("Exception in Decryption");
             }
@@ -92,13 +108,10 @@ public class GUIManager {
 
         encryptionButton.addActionListener(e -> {
             try {
-                if (inputKeyTextField.getText().length() < 16) {
-                    showMessageDialog(null, "You need 16 symbol key");
-                } else {
-                    ThreadManager threadManager = new ThreadManager(inputFileDirectory, arrayToMatrix(inputKeyTextField.getText()));
-                    key = threadManager.startEncryption(outputFileDirectory);
-                    resultTextField.setText(matrixToString());
-                }
+                ThreadManager threadManager = new ThreadManager(inputFileDirectory, arrayToMatrix(input_key));
+                key = threadManager.startEncryption(outputFileDirectory);
+                keyInfoLabel.setText("Key for decryption is ");
+                resultTextField.setText(matrixToString());
             } catch (IOException exc) {
                 showMessageDialog(null, "Exception in Encryption");
             }
